@@ -1,0 +1,10 @@
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Debug\ExitNow.csprojResolveAssemblyReference.cache
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Debug\ExitNow.Form1.resources
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Debug\ExitNow.Properties.Resources.resources
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Debug\ExitNow.csproj.GenerateResource.Cache
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\bin\Debug\ExitNow.exe
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\bin\Debug\ExitNow.pdb
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Debug\ExitNow.exe
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Debug\ExitNow.pdb
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\bin\Debug\ExitNow.exe.config
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Debug\ExitNow.About.resources

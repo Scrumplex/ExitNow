@@ -1,0 +1,9 @@
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\bin\Release\ExitNow.exe.config
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\bin\Release\ExitNow.exe
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\bin\Release\ExitNow.pdb
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.About.resources
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.Form1.resources
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.Properties.Resources.resources
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.csproj.GenerateResource.Cache
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.exe
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.pdb
