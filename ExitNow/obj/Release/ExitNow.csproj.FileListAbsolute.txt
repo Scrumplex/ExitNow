@@ -7,3 +7,5 @@ C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.Properties.Resou
 C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.csproj.GenerateResource.Cache
 C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.exe
 C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.pdb
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.csprojResolveAssemblyReference.cache
+C:\Users\Sefa\Desktop\Basic\ExitNow\ExitNow\obj\Release\ExitNow.Settings.resources

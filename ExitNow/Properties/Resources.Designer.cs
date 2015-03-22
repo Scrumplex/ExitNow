@@ -61,7 +61,7 @@ namespace ExitNow.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die 1.0 ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die 1.1 ähnelt.
         /// </summary>
         internal static string Version {
             get {
@@ -70,7 +70,7 @@ namespace ExitNow.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die 1 ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die 2 ähnelt.
         /// </summary>
         internal static string VersionID {
             get {

@@ -20,26 +20,8 @@ namespace ExitNow
 
         public static List<String> blacklist = new List<String>();
         public static Boolean running;
-
-
-        [DllImport("user32.dll")]
-        static extern int GetForegroundWindow();
-        [DllImport("user32.dll")]
-        private static extern UInt32 GetWindowThreadProcessId(Int32 hWnd, out Int32 lpdwProcessId);
-
-        private Int32 GetWindowProcessID(Int32 hwnd)
-        {
-            Int32 pid = 1;
-            GetWindowThreadProcessId(hwnd, out pid);
-            return pid;
-        }
-
-        private Process GetActiveProcess()
-        {
-            Int32 hwnd = 0;
-            hwnd = GetForegroundWindow();
-            return Process.GetProcessById(GetWindowProcessID(hwnd));
-        }
+        public static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ExitNow/";
+        public static string pidfile = "exitnow.pid";
         
         public Form1()
         {
@@ -48,9 +30,13 @@ namespace ExitNow
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/exitnow.pid"))
+            if (System.IO.Directory.Exists(path) == false)
             {
-                Int32 pid = Convert.ToInt32(System.IO.File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/exitnow.pid"));
+                System.IO.Directory.CreateDirectory(path);
+            }
+            if(System.IO.File.Exists(path + pidfile))
+            {
+                Int32 pid = Convert.ToInt32(System.IO.File.ReadAllText(path + pidfile));
                 Process[] ps = Process.GetProcesses();
 
                 foreach (Process p in ps)
@@ -71,6 +57,18 @@ namespace ExitNow
                 HK.unhookAll();
                 HK.enable(this.Handle, Hotkeys.Modifiers.Alt, Keys.F3);
 
+                Settings.LoadConfig();
+                LoadHistory();
+
+                if (Settings.history == 0)
+                {
+                    panel1.Visible = false;
+
+                    Size = new Size(409, 75);
+                }
+
+                Update();
+
                 string[] args = Environment.GetCommandLineArgs();
                 if (args.Length == 2)
                 {
@@ -83,7 +81,7 @@ namespace ExitNow
                     }
                 }
 
-                System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/exitnow.pid", "" + Process.GetCurrentProcess().Id);
+                System.IO.File.WriteAllText(path + pidfile, "" + Process.GetCurrentProcess().Id);
 
                 //Blacklist
                 blacklist.Add("explorer");
@@ -120,8 +118,29 @@ namespace ExitNow
         {
             if (running == false)
             {
-                System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/exitnow.pid");
+                if(System.IO.File.Exists(path + pidfile)) {
+                    System.IO.File.Delete(path + pidfile);
+                }
             }
+        }
+
+        [DllImport("user32.dll")]
+        static extern int GetForegroundWindow();
+        [DllImport("user32.dll")]
+        private static extern UInt32 GetWindowThreadProcessId(Int32 hWnd, out Int32 lpdwProcessId);
+
+        private Int32 GetWindowProcessID(Int32 hwnd)
+        {
+            Int32 pid = 1;
+            GetWindowThreadProcessId(hwnd, out pid);
+            return pid;
+        }
+
+        private Process GetActiveProcess()
+        {
+            Int32 hwnd = 0;
+            hwnd = GetForegroundWindow();
+            return Process.GetProcessById(GetWindowProcessID(hwnd));
         }
 
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
@@ -138,9 +157,10 @@ namespace ExitNow
                             {
                                 try
                                 {
-                                    GetActiveProcess().Kill();
                                     notifyIcon1.BalloonTipText = GetActiveProcess().ProcessName + " was killed.";
                                     notifyIcon1.ShowBalloonTip(5);
+                                    AddToHistory(GetActiveProcess());
+                                    GetActiveProcess().Kill();
                                 }
                                 catch (Exception ex)
                                 {
@@ -156,6 +176,7 @@ namespace ExitNow
                                         GetActiveProcess().Kill();
                                         notifyIcon1.BalloonTipText = GetActiveProcess().ProcessName + " was killed.";
                                         notifyIcon1.ShowBalloonTip(5);
+                                        AddToHistory(GetActiveProcess());
                                     }
                                     catch (Exception ex)
                                     {
@@ -224,6 +245,66 @@ namespace ExitNow
                 key.Close();
             }
 
+        }
+
+        public void AddToHistory(Process p)
+        {
+            string name = p.ProcessName;
+            string historyfile = "history.txt";
+
+            listView1.Items.Add(name);
+            if (System.IO.File.Exists(path + historyfile) == false)
+            {
+                System.IO.File.WriteAllText(path + historyfile, "");
+            }
+
+            if (Settings.history == 1)
+            {
+                string inhalt = System.IO.File.ReadAllText(path + historyfile);
+                inhalt = name + Environment.NewLine + inhalt;
+                System.IO.File.WriteAllText(path + historyfile, inhalt);
+            }
+        }
+
+        public void LoadHistory()
+        {
+            string historyfile = "history.txt";
+            if (System.IO.File.Exists(path + historyfile))
+            {
+                String[] lines = System.IO.File.ReadAllLines(path + historyfile);
+                foreach (String line in lines)
+                {
+                    listView1.Items.Add(line);
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            new Settings().Show();
+        }
+
+        public void Update()
+        {
+            Uri versionuri = new Uri("http://scrumplex.cloudza.org/ExitNow/update/version.txt");
+
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                System.Net.WebClient web = new System.Net.WebClient();
+                int newv = Convert.ToInt16(web.DownloadString(versionuri));
+                int thisv = Convert.ToInt16(Properties.Resources.VersionID);
+                if (newv > thisv)
+                {
+                    //UPDATE DA
+                    Process.Start("http://scrumplex.cloudza.org/ExitNow/update/");
+                    Application.Exit();
+                }
+                else if (newv < thisv)
+                {
+                    //DEV
+                    MessageBox.Show("Developer Version");
+                }
+            }
         }
     }
 }
