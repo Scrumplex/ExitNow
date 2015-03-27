@@ -51,7 +51,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(146, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(296, 130);
+            this.label1.Size = new System.Drawing.Size(324, 130);
             this.label1.TabIndex = 1;
             this.label1.Text = "ExitNow\r\nExitNow is an application which stops processes with Alt + F3\r\n\r\n\r\n\r\n\r\n\r" +
     "\n\r\n\r\nDeveloped by Scrumplex";
@@ -70,7 +70,7 @@
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(416, 146);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(56, 13);
+            this.linkLabel1.Size = new System.Drawing.Size(59, 13);
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Scrumplex";
@@ -85,6 +85,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

@@ -20,9 +20,11 @@ namespace ExitNow
 
         public static List<String> blacklist = new List<String>();
         public static Boolean running;
+        public static Boolean alrunning;
         public static string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ExitNow/";
         public static string pidfile = "exitnow.pid";
         
+
         public Form1()
         {
             InitializeComponent();
@@ -34,7 +36,7 @@ namespace ExitNow
             {
                 System.IO.Directory.CreateDirectory(path);
             }
-            if(System.IO.File.Exists(path + pidfile))
+            if(System.IO.File.Exists(path + pidfile) && alrunning == false)
             {
                 Int32 pid = Convert.ToInt32(System.IO.File.ReadAllText(path + pidfile));
                 Process[] ps = Process.GetProcesses();
@@ -87,30 +89,7 @@ namespace ExitNow
                 blacklist.Add("explorer");
                 blacklist.Add("taskmgr");
                 blacklist.Add(Process.GetCurrentProcess().ProcessName);
-
-                //reg                
-                string subkey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(subkey, true);
-                object value = null;
-                try
-                {
-                    value = key.GetValue(Application.ProductName);
-                }
-                catch (Exception ex)
-                {
-
-                }
-                key.Close();
-                if (value == null)
-                {
-                    notifyIcon1.BalloonTipText = "Autostart not enabled :/";
-                    notifyIcon1.ShowBalloonTip(5);
-                    autostartToolStripMenuItem.Checked = false;
-                }
-                else
-                {
-                    autostartToolStripMenuItem.Checked = true;
-                }
+                alrunning = true;
             }
         }
 
@@ -227,26 +206,6 @@ namespace ExitNow
             Hide();
         }
 
-        private void autostartToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (autostartToolStripMenuItem.Checked == true)
-            {
-                string value = "\"" + Application.ExecutablePath + "\" autorun";
-                string subkey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(subkey, true);
-                key.SetValue(Application.ProductName, value);
-                key.Close();
-            }
-            else
-            {
-                string subkey = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(subkey, true);
-                key.DeleteValue(Application.ProductName);
-                key.Close();
-            }
-
-        }
-
         public void AddToHistory(Process p)
         {
             string name = p.ProcessName;
@@ -281,28 +240,31 @@ namespace ExitNow
 
         private void button3_Click(object sender, EventArgs e)
         {
+            Hide();
             new Settings().Show();
         }
 
         public void Update()
         {
-            Uri versionuri = new Uri("http://scrumplex.cloudza.org/ExitNow/update/version.txt");
+            if(Settings.autoup == 1) {
+                Uri versionuri = new Uri("http://scrumplex.cloudza.org/ExitNow/update/version.txt");
 
-            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
-            {
-                System.Net.WebClient web = new System.Net.WebClient();
-                int newv = Convert.ToInt16(web.DownloadString(versionuri));
-                int thisv = Convert.ToInt16(Properties.Resources.VersionID);
-                if (newv > thisv)
+                if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
                 {
-                    //UPDATE DA
-                    Process.Start("http://scrumplex.cloudza.org/ExitNow/update/");
-                    Application.Exit();
-                }
-                else if (newv < thisv)
-                {
-                    //DEV
-                    MessageBox.Show("Developer Version");
+                    System.Net.WebClient web = new System.Net.WebClient();
+                    int newv = Convert.ToInt16(web.DownloadString(versionuri));
+                    int thisv = Convert.ToInt16(Properties.Resources.VersionID);
+                    if (newv > thisv)
+                    {
+                        //UPDATE DA
+                        Process.Start("http://scrumplex.cloudza.org/ExitNow/update/");
+                        Application.Exit();
+                    }
+                    else if (newv < thisv)
+                    {
+                        //DEV
+                        MessageBox.Show("Developer Version");
+                    }
                 }
             }
         }
