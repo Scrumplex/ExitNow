@@ -19,12 +19,12 @@ namespace ExitNow
 
         private void About_Load(object sender, EventArgs e)
         {
-            label2.Text = "Version: " + Properties.Resources.Version;
+            label2.Text = "ExitNow " + Properties.Resources.Version;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://bit.ly/Scrumplex");
+            Process.Start("https://scrumplex.net");
         }
     }
 }

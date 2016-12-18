@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ExitNow
 {
-    public class Hotkeys
+    internal class Hotkeys
     {
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
@@ -15,27 +13,27 @@ namespace ExitNow
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        public const int WM_HOTKEY_MSG_ID = 0x0312;
+        public const int WmHotkeyMsgId = 0x0312;
 
-        private List<HookInfo> hookedKeys;
+        private readonly List<HookInfo> _hookedKeys;
 
-        private int freeID;
+        private int _freeId;
 
         public struct HookInfo
         {
-            public int ID;
+            public int Id;
 
-            public IntPtr hWnd;
+            public IntPtr Hwnd;
 
-            public HookInfo(IntPtr Handle, int id)
+            public HookInfo(IntPtr hwnd, int id)
             {
-                ID = id;
-                hWnd = Handle;
+                Hwnd = hwnd;
+                Id = id;
             }
         }
 
         [Flags]
-        public enum Modifiers : int
+        public enum Modifiers
         {
             Win = 8,
             Shift = 4,
@@ -44,53 +42,47 @@ namespace ExitNow
             None = 0
         }
 
-        public HookInfo[] HookedKeys
-        {
-            get
-            {
-                return hookedKeys.ToArray();
-            }
-        }
-
         public Hotkeys()
         {
-            hookedKeys = new List<HookInfo>();
-            freeID = 0;
-        }
-        ~Hotkeys()
-        {
-            unhookAll();
+            _hookedKeys = new List<HookInfo>();
+            _freeId = 0;
         }
 
-        public void unhookAll()
+        ~Hotkeys()
         {
-            for (int i = 0; i < hookedKeys.Count; i++)
+            UnhookAll();
+        }
+
+        public void UnhookAll()
+        {
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < _hookedKeys.Count; i++)
             {
-                disable(hookedKeys[i]);
+                Disable(_hookedKeys[i]);
             }
         }
 
-        public HookInfo enable(IntPtr Handle, Modifiers Mod, Keys Key)
+        public HookInfo Enable(IntPtr handle, Modifiers mod, Keys key)
         {
-            HookInfo i = new HookInfo(Handle, freeID++);
-            hookedKeys.Add(i);
-            RegisterHotKey(Handle, i.ID, (int)Mod, (int)Key);
+            var i = new HookInfo(handle, _freeId++);
+            _hookedKeys.Add(i);
+            RegisterHotKey(handle, i.Id, (int) mod, (int) key);
             return i;
         }
 
-        public void disable(HookInfo i)
+        public void Disable(HookInfo hInfo)
         {
-            RemoveHook(i);
-            UnregisterHotKey(i.hWnd, i.ID);
+            RemoveHook(hInfo);
+            UnregisterHotKey(hInfo.Hwnd, hInfo.Id);
         }
 
         private void RemoveHook(HookInfo hInfo)
         {
-            for (int i = 0; i < hookedKeys.Count; i++)
+            for (var i = 0; i < _hookedKeys.Count; i++)
             {
-                if (hookedKeys[i].hWnd == hInfo.hWnd && hookedKeys[i].ID == hInfo.ID)
+                if (_hookedKeys[i].Hwnd == hInfo.Hwnd && _hookedKeys[i].Id == hInfo.Id)
                 {
-                    hookedKeys.RemoveAt(i--);
+                    _hookedKeys.RemoveAt(i--);
                 }
             }
         }
